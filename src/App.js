@@ -1,48 +1,47 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import ListItems from './components/ListItems/ListItems';
 import AddItem from './components/AddItem/AddItem';
 
-class App extends Component {
-  constructor(props) {
-      super(props);
-      this.state = {
-        items: [
-            {id:1, name:'Jhon', age:22},
-            {id:2, name:'Ronaldo', age:31},
-            {id:3, name:'Robert', age:33},
-            {id:4, name:'Mary', age:45},
-            {id:5, name:'Alex', age:18},
-        ]
-      }
+let App = () => {
+
+  const [items, setItem] = useState({
+    items: [
+        {id:1, name:'Jhon', age:22},
+        {id:2, name:'Ronaldo', age:31},
+        {id:3, name:'Robert', age:33},
+        {id:4, name:'Mary', age:45},
+        {id:5, name:'Alex', age:18},
+    ]
+  });
+
+  let deleteItem = (id) => {
+
+    let listitems = items.items
+  
+    const newItems = listitems.filter(item => item.id !== id);
+    setItem({
+      items:newItems
+    });
   }
 
-  deleteItem = (id) => {
-    let {items} = this.state
-    const result = items.filter(item => item.id !== id);
-    this.setState({
-      items:result
-    })
+  let addItem = (item) => {
+    const newItems = items.items;
+
+    item.id = Math.floor(Math.random() * Math.floor(100)) + 5
+
+    newItems.push(item)
+    setItem({
+      items:newItems
+    });
   }
 
-  addItem = (item) => {
-    let {items} = this.state
-    item.id = Math.floor(Math.random() * Math.floor(100))
-    items.push(item)
-    
-    this.setState({
-      items
-    })
-  }
-
-  render(){
-    return (
-      <div className="App">
-        <AddItem items={this.state.items} addItem={this.addItem} />
-        <ListItems items={this.state.items} deleteItem={this.deleteItem} />
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <AddItem items={items} addItem={addItem} />
+      <ListItems items={items.items} deleteItem={deleteItem} />
+    </div>
+  );
 }
 
 export default App;

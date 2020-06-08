@@ -1,80 +1,74 @@
-import React, { Component } from 'react'
+import React, { useState, useRef } from 'react'
 import './AddItem.css';
 
-class AddItem extends Component {
+const AddItem = (props) => {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            name: '',
-            age: ''
-        }
+    const [item, setItem] = useState({
+        name: '',
+        age: ''
+    });
 
-        this.handleChange = this.handleChange.bind(this);
-        this.onSubmitHandel = this.onSubmitHandel.bind(this);
-
-        this.name = React.createRef();
-        this.age = React.createRef();
-    }
-
-    handleChange = (e) => {
-        e.preventDefault();
-        this.setState({
-            [e.target.id]: e.target.value
+    const inputName = useRef(null);
+    const inputAge  = useRef(null);
+    
+    const handleChange = (e) => {
+        setItem({
+            ...item,
+            [e.target.name]: e.target.value
         });
-    }
+    };
 
-    onSubmitHandel = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault()
-        this.props.addItem(this.state)
+        // Form submission logic here.
+        props.addItem(item)
 
-        this.setState = ({
+        setItem({
             name: '',
             age: ''
-        })
+        });
 
-        this.name.current.value = '';
-        this.age.current.value = '';
-        this.name.current.focus();
-
-        console.log(this.state.name);
+        inputName.current.value = '';
+        inputAge.current.value = '';
+        inputName.current.focus();
     }
 
-    render() {
-        return (
-            <div className="row header">
-                <h2>React ToodList App</h2>
+    return (
+        <div className="row header">
+            <h2>React ToodList App</h2>
 
-                <form onSubmit={this.onSubmitHandel} className="form-inline">
-                    
-                    <div className="col-md-5">
-                        <input type="text" 
-                               className="form-control form-control-lg" 
-                               id='name' 
-                               onChange={this.handleChange}
-                               ref={this.name}
-                               name='inp_name' 
-                               placeholder="Name..." />
-                    </div>
+            <form className="form-inline">
+                
+                <div className="col-md-5">
 
-                    <div className="col-md-5">
-                        <input type="text" 
-                               className="form-control form-control-lg" 
-                               id='age' 
-                               onChange={this.handleChange}
-                               ref={this.age}
-                               name='inp_age' 
-                               placeholder="Age..." />
-                    </div>
+                    <input type="text" 
+                            className="form-control form-control-lg" 
+                            id='name' 
+                            value={item.name}
+                            onChange={handleChange}
+                            ref={inputName}
+                            name='name' 
+                            placeholder="Name..." />
+                </div>
 
-                    <div className="col-md-2">
-                        <input type='submit' name='btnAddItem' className="btn btn-primary addBtn" value='Add' />
-                    </div>
-   
-                </form>
-            </div>
-        )
-    }
+                <div className="col-md-5">
+                    <input type="text" 
+                            className="form-control form-control-lg" 
+                            id='age' 
+                            value={item.age}
+                            onChange={handleChange}
+                            ref={inputAge}
+                            name='age' 
+                            placeholder="Age..." />
+                </div>
+
+                <div className="col-md-2">
+                <button type='submit' onClick={handleSubmit}>Add</button>
+                </div>
+
+            </form>
+        </div>
+    )
 }
 
 export default AddItem
